@@ -111,9 +111,10 @@ for i in partecipanti:
     corridore = Gara(i.GetNome(),i.GetCognome(),i.t_min,0)
     corridore.start()
     risultati.append(corridore)
-    if(i == Poldo):#ultimo a partire e quindi chiude il Thread
-        corridore.join()
-
+#    if(i == Poldo):#ultimo a partire e quindi chiude il Thread
+#        corridore.join()
+corridore.join()
+print("------------------------------GARA FINITA------------------------------\n")
 #stampa risultati
 tempoVincente = 999#numero default
 nomeVincitore= ""
