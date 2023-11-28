@@ -76,7 +76,7 @@ class Gara(Thread):
 
 
     def run(self):
-        print("è partito: " + self.nome + "" +self.cognome )
+        print("è partito: " + self.nome + " " +self.cognome )
         for km in range(42):#simulazione di una maratona, ogni km succede qualcosa 
             Gara.svolgimento_gara(self)
             print("siamo al chilometro: " + str(km+1) + " di corsa\n")
