@@ -36,6 +36,8 @@ class Gara(Thread):
         self.t_min = t_min
         self.t_tot = t_tot
         self.cognome = cognome
+        
+    Istirato = False
     
     def Sleep(n):
         time.sleep(n)
@@ -47,39 +49,44 @@ class Gara(Thread):
     def GetCognome(self):
         return self.cognome
     
-    def svolgimento_gara(self):
+    def svolgimento_gara(self, Istirato):
         n_random = random.randint(1,10)#numero casuale da 1 a 10
-        if(n_random == 1): #scatto
+        if(n_random == 1 and self.Istirato == False): #scatto
             print(self.nome + " " + self.cognome + " ha fatto uno scatto\n")
-            self.t_tot += self.t_min*0.7
+            self.t_tot += self.t_min / 0.7
             Gara.Sleep(2)
             self.t_tot += self.t_min
-        if(n_random == 2): #contrattura
+        if(n_random == 2 and self.Istirato == False): #contrattura
             print(self.nome + " " + self.cognome + " ha ricevuto una cotrattura\n")
-            self.t_tot += self.t_min/2
-            if(random.randint(1,2)==2):
-                self.t_tot += self.t_min
-        if(n_random>=3 and n_random<=7):#andatura normale
+            self.t_tot += self.t_min * 2 
+            if(random.randint(1,2)==2): #non ha più la contrattura
+                self.t_tot -= self.t_min
+        if(n_random>=3 and n_random<=7 and self.Istirato == False):#andatura normale
             print(self.nome + " " + self.cognome + " corre spensierato\n")
             self.t_tot += self.t_min
         if(n_random == 8): # stiramento
             print(self.nome + " " + self.cognome + " ha ricevuto stiramento\n")
-            self.t_tot += self.t_min/4
-        if(n_random == 9):#ritmo in aumento
+            self.t_tot += self.t_min * 4
+            self.Istirato = True
+        if(n_random == 9 and self.Istirato == False):#ritmo in aumento
             print(self.nome + " " + self.cognome + " ha aumentato il ritmo\n")
-            self.t_tot += self.t_min *0.9
-        if(n_random == 10):#stanchezza
+            self.t_tot += self.t_min / 0.9
+        if(n_random == 10 and self.Istirato == False):#stanchezza
             print(self.nome + " " + self.cognome + " inizia a sentire la stanchezza!\n")
-            self.t_tot += self.t_min /1.1
+            self.t_tot += self.t_min * 1.1
+        if(self.Istirato): 
+             print(self.nome + " " + self.cognome + " Sono ancora stirato\n")
+             self.t_tot += self.t_min * 4
         Gara.Sleep(1)#da il tempo di un 1 secondo a km
 
 
 
     def run(self):
         print("è partito: " + self.nome + " " +self.cognome )
+        Isstirato = False
         for km in range(42):#simulazione di una maratona, ogni km succede qualcosa 
-            Gara.svolgimento_gara(self)
-            print("siamo al chilometro: " + str(km+1) + " di corsa\n")
+            Gara.svolgimento_gara(self, Isstirato) 
+            print(self.nome + " " + self.cognome +" al chilometro: " + str(km+1) + " di corsa\n")
         
         
                
@@ -113,6 +120,7 @@ for i in partecipanti:
     risultati.append(corridore)
 #    if(i == Poldo):#ultimo a partire e quindi chiude il Thread
 #        corridore.join()
+print("ultimo corridore: " + str(corridore))
 corridore.join()
 print("------------------------------GARA FINITA------------------------------\n")
 #stampa risultati
