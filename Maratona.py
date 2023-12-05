@@ -38,6 +38,7 @@ class Gara(Thread):
         self.cognome = cognome
         
     Istirato = False
+    IsContratto = False
     
     def Sleep(n):
         time.sleep(n)
@@ -52,30 +53,34 @@ class Gara(Thread):
     def svolgimento_gara(self):
         # il segno // divide per interi invece / è la divisione normale con la virgola
         if(self.Istirato==False):
-            n_random = random.randint(1,10)#numero casuale da 1 a 10
-            if(n_random == 1 and self.Istirato == False): #scatto
-                print(self.nome + " " + self.cognome + " ha fatto uno scatto\n")
-                self.t_tot += self.t_min // 0.7
-                Gara.Sleep(2)
-                self.t_tot += self.t_min
-            if(n_random == 2 and self.Istirato == False): #contrattura
-                print(self.nome + " " + self.cognome + " ha ricevuto una cotrattura\n")
-                self.t_tot += self.t_min * 2 
+            if(self.IsContratto == False):
+                n_random = random.randint(1,10)#numero casuale da 1 a 10
+                if(n_random == 1 and self.Istirato == False): #scatto
+                    print(self.nome + " " + self.cognome + " ha fatto uno scatto\n")
+                    self.t_tot += self.t_min // 0.7
+                    Gara.Sleep(2)
+                    self.t_tot += self.t_min
+                if(n_random == 2 and self.Istirato == False): #contrattura
+                    print(self.nome + " " + self.cognome + " ha ricevuto una cotrattura\n")
+                    self.t_tot += self.t_min * 2 
+                    self.IsContratto = True
+                if(n_random>=3 and n_random<=7 and self.Istirato == False):#andatura normale
+                    print(self.nome + " " + self.cognome + " corre spensierato\n")
+                    self.t_tot += self.t_min
+                if(n_random == 8): # stiramento
+                    print(self.nome + " " + self.cognome + " ha ricevuto stiramento\n")
+                    self.t_tot += self.t_min * 4
+                    self.Istirato = True
+                if(n_random == 9 and self.Istirato == False):#ritmo in aumento
+                    print(self.nome + " " + self.cognome + " ha aumentato il ritmo\n")
+                    self.t_tot += self.t_min // 0.9
+                if(n_random == 10 and self.Istirato == False):#stanchezza
+                    print(self.nome + " " + self.cognome + " inizia a sentire la stanchezza!\n")
+                    self.t_tot += self.t_min * 1.1
+            else:
                 if(random.randint(1,2)==2): #non ha più la contrattura
-                    self.t_tot -= self.t_min
-            if(n_random>=3 and n_random<=7 and self.Istirato == False):#andatura normale
-                print(self.nome + " " + self.cognome + " corre spensierato\n")
-                self.t_tot += self.t_min
-            if(n_random == 8): # stiramento
-                print(self.nome + " " + self.cognome + " ha ricevuto stiramento\n")
-                self.t_tot += self.t_min * 4
-                self.Istirato = True
-            if(n_random == 9 and self.Istirato == False):#ritmo in aumento
-                print(self.nome + " " + self.cognome + " ha aumentato il ritmo\n")
-                self.t_tot += self.t_min // 0.9
-            if(n_random == 10 and self.Istirato == False):#stanchezza
-                print(self.nome + " " + self.cognome + " inizia a sentire la stanchezza!\n")
-                self.t_tot += self.t_min * 1.1
+                        self.t_tot -= self.t_min
+                        print(self.nome + " " + self.cognome + " non ha più la contrattura\n")
         else:
              print(self.nome + " " + self.cognome + " Sono ancora stirato\n")
              self.t_tot += self.t_min * 4
@@ -86,6 +91,7 @@ class Gara(Thread):
     def run(self):
         print("è partito: " + self.nome + " " +self.cognome )
         Isstirato = False
+        IsContratto = False
         for km in range(42):#simulazione di una maratona, ogni km succede qualcosa 
             Gara.svolgimento_gara(self) 
             print(self.nome + " " + self.cognome +" al chilometro: " + str(km+1) + " di corsa\n")
@@ -141,7 +147,7 @@ for corridori in risultati:
      
 
 #stampa vincitore
-print("vincitore maratona: " + nomeVincitore + " "+ cognomeVincitore +" con un tempo di: " + str(tempoVincente))      
+print("Vincitore maratona: " + nomeVincitore + " "+ cognomeVincitore +" con un tempo di: " + str(tempoVincente))      
 
 #ATTENZIONE!!!
 #prendere il risultato in minuti [non in secondi]
