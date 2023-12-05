@@ -36,7 +36,9 @@ class Gara(Thread):
         self.t_min = t_min
         self.t_tot = t_tot
         self.cognome = cognome
-        
+
+    # variabili generali per salvare il dato del singolo maratoneta    
+    numeroDisparo = 0    
     Istirato = False
     IsContratto = False
     
@@ -50,11 +52,17 @@ class Gara(Thread):
     def GetCognome(self):
         return self.cognome
     
-    def svolgimento_gara(self):
+    def svolgimento_gara(self,km):
         # il segno // divide per interi invece / è la divisione normale con la virgola
         if(self.Istirato==False):
             if(self.IsContratto == False):
-                n_random = random.randint(1,10)#numero casuale da 1 a 10
+                if(km <= 1):# se è il primo km o meno lo indirizzo direttamente ad una andatura normale
+                    n_random = 3
+                elif(km % 2 == 0):# ogni 2 km estraggo un numero casuale per l'evento 
+                    n_random = random.randint(1,10)#numero casuale da 1 a 10
+                    self.numeroDisparo  = n_random
+                elif(km % 2 != 0 and km >2):# l'evento successo nel km precedente (pari) continua anche per il km successivo (disparo)
+                    n_random = self.numeroDisparo
                 if(n_random == 1 and self.Istirato == False): #scatto
                     print(self.nome + " " + self.cognome + " ha fatto uno scatto\n")
                     self.t_tot += self.t_min // 0.7
@@ -81,8 +89,9 @@ class Gara(Thread):
                 if(random.randint(1,2)==2): #non ha più la contrattura
                         self.t_tot -= self.t_min
                         print(self.nome + " " + self.cognome + " non ha più la contrattura\n")
+                        self.IsContratto = False
         else:
-             print(self.nome + " " + self.cognome + " Sono ancora stirato\n")
+             print(self.nome + " " + self.cognome + " è ancora stirato\n")
              self.t_tot += self.t_min * 4
         Gara.Sleep(1)#da il tempo di un 1 secondo a km
 
@@ -91,7 +100,7 @@ class Gara(Thread):
     def run(self):
         print("è partito: " + self.nome + " " +self.cognome )
         for km in range(42):#simulazione di una maratona, ogni km succede qualcosa 
-            Gara.svolgimento_gara(self) 
+            Gara.svolgimento_gara(self,km+1) 
             print(self.nome + " " + self.cognome +" al chilometro: " + str(km+1) + " di corsa\n")
             #print(self.nome + " " + self.cognome +" tempo: " + str(self.t_tot))
         
