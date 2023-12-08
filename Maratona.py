@@ -103,15 +103,12 @@ class Gara(Thread):
             Gara.svolgimento_gara(self,km+1) 
             print(self.nome + " " + self.cognome +" al chilometro: " + str(km+1) + " di corsa\n")
             #print(self.nome + " " + self.cognome +" tempo: " + str(self.t_tot))
-        
-        
-               
 
 
-#t_min = tempo di corsa per gareggiare 5 per Kilometro
+
+
+""""
 #inserimento alteti
-Atleti = [] #array atleti
-partecipanti = [] # partecipanti gara
 Lorenzo = Atleta ("Lorenzo", "Bastianelli", 17, 70, 5)
 Enrico = Atleta ("Enrico", "Fiore", 18, 65, 7)
 Gino = Atleta ("Gino", "Rossi", 19, 80, 3)
@@ -122,11 +119,78 @@ Atleti.append(Enrico)
 Atleti.append(Gino)
 Atleti.append(Pippo)
 Atleti.append(Poldo)
-#controllo di chi può partecipare
-for i in Atleti : 
-    if i.iscrizione():
-        partecipanti.append(i)
+"""
+def mostraAtleti():
+    j=1
+    for i  in Atleti:
+        print("Partecipante "+ str(j) + ": " + i.GetNome() + " " + i.GetCognome()+ "\n")
+        j+=1
 
+#MENU
+def Menu():
+    nelMenu = True #per entrare e rimanere nel menu
+    while(nelMenu == True):
+        print("Scegliere una tra le seguenti opzioni: \n1) Inserire atleta\n2) Eliminare atleta\n3) Iniziare gara\n4) Mostra partecipanti\n")
+        while(True):
+            try:
+                scelta = int(input("Inserire il NUMERO dell'opzione: "))
+                if scelta in (1, 2, 3,4):# se la scelta è 1 o 2 o 3 o 4 esci dal try catch
+                    break
+                else:
+                    print("ATTENZIONE: bisogna inserire il numero corrispondente alla scelta")
+            except ValueError:
+                print("ATTENZIONE: bisogna inserire il numero corrispondente alla scelta")
+        
+        if( scelta == 1): #inserire atleta
+            print("Per ISCRIVERE un atleta ci serve: NOME, COGNOME, ETA', PESO, TEMPO MINIMO A KM\n")
+            print("Inserire NOME\n")
+            nome = str(input("nome: "))
+            print("\nInserire COGNOME\n")
+            cognome = str(input("cognome: "))
+            print("\nInserire ETA'\n")
+            età = int(input("età: "))
+            print("\nInserire PESO\n")
+            peso = int(input("peso: "))
+            print("\nInserire TEMPO MINIMO A KM\n")
+            t_min = int(input("tempo minimo: "))
+            nuovo_atleta = Atleta(nome,cognome,età,peso,t_min)#creazione nella classe Atleta 
+            Atleti.append(nuovo_atleta)# aggiunto nell'array
+        elif(scelta == 2):# elimina atleta
+            mostraAtleti()
+            print("Per ELIMINARE un atleta ci serve: NOME, COGNOME\n")
+            print("Inserire NOME\n")
+            nome = str(input("nome: "))
+            print("\nInserire COGNOME\n")
+            cognome = str(input("cognome: "))
+            nonTrovato =0
+            for atleta in Atleti:
+                if(atleta.GetNome() == nome and atleta.GetCognome() == cognome):
+                    Atleti.remove(atleta)# rimosso atleta dall'array
+                    print("\nL'Atleta"+ nome +" "+ cognome+" è stato rimosso con successo\n")
+                    break
+                else:
+                    nonTrovato+=1 # per tenere traccia di quante volte il nome inserito non è stato trovato
+            if(nonTrovato == len(Atleti)):# in caso il nome è stato inserito sbagliato
+                print("\nAtleta non trovo, provare a reinserire atleta\n")
+        elif(scelta == 3):# inizia gara
+            #controllo di chi può partecipare
+            for i in Atleti : 
+                if i.iscrizione():
+                    partecipanti.append(i)
+            if(len(partecipanti)<2): #controllo che ci siano abbastanza atleti per fare la gara (minimo 2)
+                print("Ci sono ancora pochi alteti per iniziare la gara\n")
+            else:
+                nelMenu = False
+        elif(scelta == 4):# mostra partecipanti
+            mostraAtleti()
+
+
+#MAIN
+#t_min = tempo di corsa per gareggiare 5 per Kilometro
+
+Atleti = [] #array atleti
+partecipanti = [] # partecipanti gara
+Menu()
 #array in cui salvare risultati
 risultati = []
 #Partenza gara
@@ -134,10 +198,7 @@ for i in partecipanti:
     corridore = Gara(i.GetNome(),i.GetCognome(),i.t_min,0)
     corridore.start()
     risultati.append(corridore)
-#    if(i == Poldo):#ultimo a partire e quindi chiude il Thread
-#        corridore.join()
-#print("ultimo corridore: " + str(corridore))
-#corridore.join()
+#Aspettando che tutti finiscano la gara
 for thread  in risultati: 
     thread.join()
 print("------------------------------GARA FINITA------------------------------\n")
