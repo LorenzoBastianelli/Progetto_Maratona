@@ -152,7 +152,7 @@ def Menu():
             print("\nInserire PESO\n")
             peso = int(input("peso: "))
             print("\nInserire TEMPO MINIMO A KM\n")
-            t_min = int(input("tempo minimo: "))
+            t_min = float(input("tempo minimo: "))
             nuovo_atleta = Atleta(nome,cognome,età,peso,t_min)#creazione nella classe Atleta 
             Atleti.append(nuovo_atleta)# aggiunto nell'array
         elif(scelta == 2):# elimina atleta
@@ -171,7 +171,7 @@ def Menu():
                 else:
                     nonTrovato+=1 # per tenere traccia di quante volte il nome inserito non è stato trovato
             if(nonTrovato == len(Atleti)):# in caso il nome è stato inserito sbagliato
-                print("\nAtleta non trovo, provare a reinserire atleta\n")
+                print("\nAtleta non trovato, provare a reinserire atleta\n")
         elif(scelta == 3):# inizia gara
             #controllo di chi può partecipare
             for i in Atleti : 
